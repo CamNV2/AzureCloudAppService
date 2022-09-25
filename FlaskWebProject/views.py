@@ -62,7 +62,6 @@ def post(id):
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        app.logger.warning('Successful User Login')
         return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
@@ -78,7 +77,6 @@ def login():
     session["state"] = str(uuid.uuid4())
     auth_url = _build_auth_url(scopes=Config.SCOPE, state=session["state"])
     app.logger.warning('Admin logged in successfully')
-    app.logger.warning('Invalid username or password')
     return render_template('login.html', title='Sign In', form=form, auth_url=auth_url)
 
 @app.route(Config.REDIRECT_PATH)  # Its absolute URL must match your app's redirect_uri set in AAD
@@ -104,13 +102,12 @@ def authorized():
         login_user(user)
         app.logger.warning('Admin logged in successfully')
         _save_cache(cache)
-        app.logger.warning('Invalid username or password')
     return redirect(url_for('home'))
 
 @app.route('/logout')
 def logout():
     logout_user()
-    app.logger.warning('Logout successful')
+    app.logger.warning('Logout successfully!')
     if session.get("user"): # Used MS Login
         # Wipe out user and its token cache from session
         session.clear()
