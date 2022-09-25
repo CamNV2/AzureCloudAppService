@@ -12,6 +12,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from FlaskWebProject.models import User, Post
 import msal
 import uuid
+import logging
 
 imageSourceUrl = 'https://'+ app.config['BLOB_ACCOUNT']  + '.blob.core.windows.net/' + app.config['BLOB_CONTAINER']  + '/'
 
@@ -73,11 +74,10 @@ def login():
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('home')
-        app.logger.warning('Successful User Login')
         return redirect(next_page)
     session["state"] = str(uuid.uuid4())
     auth_url = _build_auth_url(scopes=Config.SCOPE, state=session["state"])
-    app.logger.warning('Successful User Login')
+    app.logger.warning('Admin logged in successfully')
     app.logger.warning('Invalid username or password')
     return render_template('login.html', title='Sign In', form=form, auth_url=auth_url)
 
@@ -102,12 +102,15 @@ def authorized():
         # Here, we'll use the admin username for anyone who is authenticated by MS
         user = User.query.filter_by(username="admin").first()
         login_user(user)
+        app.logger.warning('Admin logged in successfully')
         _save_cache(cache)
+        app.logger.warning('Invalid username or password')
     return redirect(url_for('home'))
 
 @app.route('/logout')
 def logout():
     logout_user()
+    app.logger.warning('Logout successful')
     if session.get("user"): # Used MS Login
         # Wipe out user and its token cache from session
         session.clear()
