@@ -25,11 +25,10 @@ In terms of availability Virtual machines generally have more availability than 
 It is fairly easier to deploy applications to App Service than it is to Virtual Machines.
 
 --------------------
-#### Justification
+#### My choice
 I choose App Service because the CMS app is developed using python and App Service is very well supported and suitable for easy deploy through Azure.
 Using App service I can quickly deploy my web application without creating programming environment and Virtual machines behaves like a full, separate computer that I am responsible for everything: maitenance, security, update etc.
 
 --------------------
-#### Decision
 
 My Python App Service [https://articlecmsproject.azurewebsites.net/]
